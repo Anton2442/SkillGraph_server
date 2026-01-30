@@ -4,10 +4,14 @@ from authx.exceptions import JWTDecodeError
 import uvicorn
 
 from routes.auth import router as auth_router
+from routes.directions import router as directions_router
+from routes.graphs import router as graphs_router
 
 app = FastAPI()
 
 app.include_router(auth_router)
+app.include_router(directions_router)
+app.include_router(graphs_router)
 
 
 @app.exception_handler(JWTDecodeError)
