@@ -73,7 +73,8 @@ class AuthService:
         result = await db.execute(
             select(
                 User.username,
-                User.avatar_url
+                User.avatar_url,
+                User.email_verified
             ).where(User.id == user_id)
         )
 
@@ -84,6 +85,7 @@ class AuthService:
 
         return {
             "username": user.username,
+            "email_verified": user.email_verified,
             "avatar": user.avatar_url,
             "skills": skills_count,
             **tests_stats,

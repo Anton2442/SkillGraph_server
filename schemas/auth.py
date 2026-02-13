@@ -55,7 +55,10 @@ class ProfileResponse(BaseModel):
     skills_score: int
     total_tests: int
     avg_test_score: int
+    email_verified: bool
 
 
 class UpdateUserRequest(BaseModel):
     username: str = Field(min_length=3, max_length=20)
+
+

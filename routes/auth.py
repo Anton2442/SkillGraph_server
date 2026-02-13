@@ -1,4 +1,5 @@
 import os
+from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, Security, BackgroundTasks, UploadFile
 from fastapi.responses import HTMLResponse, FileResponse
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -224,18 +225,21 @@ async def resend_email(
     
     result = await db.execute(
         text("""
-            SELECT EXTRACT(EPOCH FROM (now() - created_at)) AS seconds
+            SELECT expires_at
             FROM email_verification_tokens
             WHERE user_id = :user_id
+            ORDER BY id DESC
+            LIMIT 1
         """),
         {"user_id": user.id}
     )
 
     row = result.first()
 
-    if row and row.seconds < 60:
-        raise HTTPException(429, f"Try again in {int(60 - row.seconds)} seconds")
-
+    if row and row.expires_at:
+        if row.expires_at > datetime.now(timezone.utc):
+            raise HTTPException(429, "Token still active, try later")
+        
     token = await AuthService.create_email_token(db, user.id)
 
     background_tasks.add_task(
