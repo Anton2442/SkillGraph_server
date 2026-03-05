@@ -41,21 +41,13 @@ class RefreshResponse(BaseModel):
     access_token: str
 
 
-class MeResponse(BaseModel):
+class ProfileResponse(BaseModel):
     username: str
+    email_verified: bool
     avatar: str | None
     skills: int
     total_tests: int
     average_score: int
-
-
-
-class ProfileResponse(BaseModel):
-    username: str
-    skills_score: int
-    total_tests: int
-    avg_test_score: int
-    email_verified: bool
 
 
 class UpdateUserRequest(BaseModel):

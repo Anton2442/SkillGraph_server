@@ -154,7 +154,7 @@ async def refresh(
 
 @router.get(
     "/me",
-    response_model=MeResponse,
+    response_model=ProfileResponse,
     responses={401: {"description": "Not authenticated"}}
 )
 async def me(
